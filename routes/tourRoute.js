@@ -1,5 +1,14 @@
 const express = require("express");
 const router = express.Router();
+// const {
+//   aliasTopTours,
+//   getTours,
+//   createTour,
+//   getTour,
+//   updateTour,
+//   deleteTour,
+// } = require("../controllers/tourController");
+
 const {
   aliasTopTours,
   getTours,
@@ -7,7 +16,7 @@ const {
   getTour,
   updateTour,
   deleteTour,
-} = require("../controllers/tourController");
+} = require("../controllers/tourController-refactor");
 
 router.route("/top-5-tours").get(aliasTopTours, getTours);
 router.route("/").get(getTours).post(createTour);
