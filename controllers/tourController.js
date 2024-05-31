@@ -22,9 +22,17 @@ exports.getTours = async (req, res) => {
       // req.query.sort might be {sort: '-price,ratingsAverage'}. But we need to convert it to {sort: '-price ratingsAverage'}
       const sortBy = req.query.sort.split(",").join(" ");
       query = query.sort(sortBy);
+    } else {
+      query = query.sort("-createdAt");
     }
-    else{
-      query = query.sort('-createdAt')
+
+    // FIELD LIMITING
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      // exclude __v in the response
+      query = query.select("-__v");
     }
 
     const tours = await query;
