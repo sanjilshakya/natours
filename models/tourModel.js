@@ -55,6 +55,10 @@ const tourSchema = new mongoose.Schema(
       select: false,
     },
     startDates: [Date],
+    secret: {
+      type: Boolean,
+      default: false,
+    },
   },
   //To output vitrual properties:
   {
@@ -68,7 +72,7 @@ tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
-// DOCUMENT MIDDLEWARE:
+// DOCUMENT MIDDLEWARE: "save"
 
 // pre middleware "save" Runs before .save() and .create() only
 tourSchema.pre("save", function (next) {
@@ -81,6 +85,21 @@ tourSchema.pre("save", function (next) {
 //   do something
 //  next()
 // })
+
+//QUERY MIDDLEWARE: "find"
+// tourSchema.pre("find", function (next) {  --> only works on find()
+// to make it work on every find we use regular expression as: /^find/ which works on find(), findOne(), findById(),
+// findByIdAndUpdate(), findByIdAndUpdate()
+tourSchema.pre(/^find/, function (next) {
+  this.find({ secret: { $ne: true } });
+  next();
+});
+
+// AGGREGATION MIDDLEWARE:
+tourSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { secret: { $ne: true } } });
+  next();
+});
 
 const Tour = mongoose.model("Tour", tourSchema);
 
