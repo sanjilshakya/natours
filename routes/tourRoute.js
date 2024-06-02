@@ -18,7 +18,7 @@ const {
   deleteTour,
   getTourStats,
   getMonthlyPlan,
-} = require("../controllers/tourController-refactor");
+} = require("../controllers/tourController-refactor-2");
 
 router.route("/top-5-tours").get(aliasTopTours, getTours);
 router.route("/tour-stats").get(getTourStats);
