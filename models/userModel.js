@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is a required field"],
     minlength: [8, "Password should be atleast 8 characters"],
+    select: false,
   },
   confirmPassword: {
     type: String,
@@ -44,6 +45,15 @@ userSchema.pre("save", async function (next) {
   this.confirmPassword = undefined;
   next();
 });
+
+// Instance Method
+userSchema.methods.correctPassword = async function (
+  reqBodyPassword,
+  userPassowrd
+) {
+  // this returns true or false
+  return await bcrypt.compare(reqBodyPassword, userPassowrd);
+};
 
 const User = mongoose.model("User", userSchema);
 
