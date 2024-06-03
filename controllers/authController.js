@@ -84,3 +84,11 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
+
+exports.restrictTo = (req, res, next) => {
+  if (req.user.role !== "admin" && req.user.role !== "lead-guide")
+    return next(
+      new AppError("You do not have permission to perform this action", 403)
+    );
+  next();
+};
