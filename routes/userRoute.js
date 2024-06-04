@@ -7,7 +7,7 @@ const {
   resetPassword,
   updatePassword,
 } = require("../controllers/authController");
-const { getUsers, updateMe } = require("../controllers/userController");
+const { getUsers, updateMe, deleteMe } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -17,6 +17,7 @@ router.post("/forgot-password", forgotPassword);
 router.patch("/reset-password/:token", resetPassword);
 router.patch("/change-password", protect, updatePassword);
 router.patch("/updateMe", protect, updateMe);
+router.delete("/deleteMe", protect, deleteMe);
 
 //Protecting the routes with middleware
 router.route("/").get(protect, getUsers);
