@@ -15,7 +15,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgot-password", forgotPassword);
 router.patch("/reset-password/:token", resetPassword);
-router.patch("/change-password", protect, resetPassword);
+router.patch("/change-password", protect, updatePassword);
 
 //Protecting the routes with middleware
 router.route("/").get(protect, getUsers);

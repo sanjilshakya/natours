@@ -12,6 +12,18 @@ const signToken = (id) => {
   });
 };
 
+const createTokenResponseBody = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
   const newUser = await User.create({
@@ -21,15 +33,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     confirmPassword,
   });
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: "success",
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createTokenResponseBody(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -44,11 +48,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError("Incorrect email or password", 401));
 
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+  createTokenResponseBody(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -161,11 +161,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3. Update changedPasswordAt for the user --> done in user model middleware.
 
   // 4. Log the user in, send jwt
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+  createTokenResponseBody(user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -181,9 +177,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.confirmPassword = newPassword;
   await user.save();
   // 4. log user in, send jwt
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+  createTokenResponseBody(user, 200, res);
 });
