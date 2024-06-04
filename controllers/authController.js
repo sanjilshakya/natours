@@ -99,7 +99,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1. Get user based on email
   const user = await User.findOne({ email: req.body.email });
   if (!user)
-    return next(new AppError("There is no email with that email address", 404));
+    return next(new AppError("There is no user with that email address", 404));
 
   // 2. Generate the random reset token
   const resetToken = user.createPasswordResetToken();
@@ -156,10 +156,11 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.confirmPassword = confirmPassword;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
-
-  // 3. Update changedPasswordAt for the user
-  // 4. Log the user in, send jwt
   await user.save();
+
+  // 3. Update changedPasswordAt for the user --> done in user model middleware.
+
+  // 4. Log the user in, send jwt
   const token = signToken(user._id);
   res.status(200).json({
     status: "success",
