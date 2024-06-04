@@ -3,6 +3,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const hpp = require("hpp");
 
 const tourRouter = require("./routes/tourRoute");
 const userRouter = require("./routes/userRoute");
@@ -33,6 +34,14 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
+// Prevent parameter pollution
+// app.use(hpp()); - doesn't allow duplicates in params. eg: sort="duration"&sort="price"
+app.use(
+  hpp({
+    // to allow duplicates
+    whitelist: ["duration", "ratingsQuantity", "ratingsAverage", "difficulty"],
+  })
+);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 
