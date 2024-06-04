@@ -11,10 +11,10 @@ const tourSchema = new mongoose.Schema(
       minlength: [10, "Tour name must have more or equal to 10 characters"],
       maxlength: [40, "Tour name must have less or equal to 40 characters"],
       // validate: validatorPkg.isAlpha
-      validate: [
-        validatorPkg.isAlpha,
-        "Tour name must only contain characters",
-      ],
+      // validate: [
+      //   validatorPkg.isAlpha,
+      //   "Tour name must only contain characters",
+      // ],
     },
     slug: String,
     duration: {
@@ -83,6 +83,29 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      addres: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"],
+        },
+        coordinates: [Number],
+        addres: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   //To output vitrual properties:
   {

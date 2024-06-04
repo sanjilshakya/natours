@@ -14,9 +14,7 @@ mongoose
     console.log("Could not connect to the database");
   });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, "utf-8")
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, "utf-8"));
 
 importData = async () => {
   try {
