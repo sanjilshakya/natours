@@ -1,6 +1,8 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 const tourRouter = require("./routes/tourRoute");
 const userRouter = require("./routes/userRoute");
@@ -22,11 +24,14 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Body parser, reading data from req.body
-app.use(express.json());
+// Body parser, reading data from req.body and set the size limit of body
+app.use(express.json({ limit: "10kb" }));
 
-//Can set the limit to the req body by passing limit property
-// app.use(express.json({limit:'10kb'}));
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
