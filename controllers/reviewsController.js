@@ -23,6 +23,7 @@ exports.setTourAndUserIds = (req, res, next) => {
   next();
 };
 
+exports.getReview = factoryHandler.getOne(Review);
 exports.createReview = factoryHandler.createOne(Review);
 exports.updateReview = factoryHandler.updateOne(Review);
 exports.deleteReview = factoryHandler.deleteOne(Review);

@@ -13,6 +13,7 @@ const {
   deleteMe,
   deleteUser,
   updateUser,
+  getUser,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -28,6 +29,6 @@ router.delete("/deleteMe", protect, deleteMe);
 //Protecting the routes with middleware
 router.route("/").get(protect, getUsers);
 
-router.route("/:id").patch(updateUser).delete(deleteUser);
+router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
 module.exports = router;

@@ -57,6 +57,8 @@ exports.getUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getUser = factoryHandler.getOne(User)
+
 exports.updateUser = factoryHandler.updateOne(User);
 
 exports.deleteUser = factoryHandler.deleteOne(User);
