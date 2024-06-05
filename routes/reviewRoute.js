@@ -5,7 +5,8 @@ const {
 } = require("../controllers/reviewsController");
 const { protect, restrictTo } = require("../controllers/authController");
 
-const router = express.Router();
+// { mergeParams: true } to get the tourId from tourRout.js
+const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
