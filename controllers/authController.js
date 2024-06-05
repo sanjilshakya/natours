@@ -26,7 +26,7 @@ const createTokenResponseBody = (user, statusCode, res) => {
 
   res.cookie("jwt", token, cookieOptions);
 
-  user.password = undefined
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
@@ -100,12 +100,14 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.restrictTo = (req, res, next) => {
-  if (req.user.role !== "admin" && req.user.role !== "lead-guide")
-    return next(
-      new AppError("You do not have permission to perform this action", 403)
-    );
-  next();
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role))
+      return next(
+        new AppError("You do not have permission to perform this action", 403)
+      );
+    next();
+  };
 };
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {

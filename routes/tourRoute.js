@@ -19,7 +19,7 @@ const {
   getTourStats,
   getMonthlyPlan,
 } = require("../controllers/tourController-refactor-2");
-const { protect,restrictTo } = require("../controllers/authController");
+const { protect, restrictTo } = require("../controllers/authController");
 
 router.route("/top-5-tours").get(aliasTopTours, getTours);
 router.route("/tour-stats").get(getTourStats);
@@ -29,6 +29,6 @@ router
   .route("/:id")
   .get(getTour)
   .patch(updateTour)
-  .delete(protect, restrictTo, deleteTour);
+  .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
 
 module.exports = router;
