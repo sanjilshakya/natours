@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
-const validatorPkg = require("validator");
+// const validatorPkg = require("validator");
 
 const tourSchema = new mongoose.Schema(
   {
@@ -106,6 +106,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   },
   //To output vitrual properties:
   {
@@ -140,6 +141,14 @@ tourSchema.pre("save", function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.find({ secret: { $ne: true } });
   next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "guides",
+    select: "-__v -passwordChangedAt",
+  });
+  next()
 });
 
 // AGGREGATION MIDDLEWARE:
