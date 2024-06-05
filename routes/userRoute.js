@@ -7,7 +7,12 @@ const {
   resetPassword,
   updatePassword,
 } = require("../controllers/authController");
-const { getUsers, updateMe, deleteMe } = require("../controllers/userController");
+const {
+  getUsers,
+  updateMe,
+  deleteMe,
+  deleteUser,
+} = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -21,5 +26,7 @@ router.delete("/deleteMe", protect, deleteMe);
 
 //Protecting the routes with middleware
 router.route("/").get(protect, getUsers);
+
+router.route("/:id").delete(deleteUser);
 
 module.exports = router;

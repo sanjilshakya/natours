@@ -18,7 +18,7 @@ const {
   deleteTour,
   getTourStats,
   getMonthlyPlan,
-} = require("../controllers/tourController-refactor-2");
+} = require("../controllers/tourController-refactor-3");
 const { protect, restrictTo } = require("../controllers/authController");
 
 const reviewRoute = require("../routes/reviewRoute");
