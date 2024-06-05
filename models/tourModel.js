@@ -120,6 +120,13 @@ tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
+// Virtual Populate
+tourSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "tour",
+  localField: "_id",
+});
+
 // DOCUMENT MIDDLEWARE: "save"
 
 // pre middleware "save" Runs before .save() and .create() only
@@ -146,9 +153,9 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: "guides",
-    select: "-__v -passwordChangedAt",
+    select: "name",
   });
-  next()
+  next();
 });
 
 // AGGREGATION MIDDLEWARE:
