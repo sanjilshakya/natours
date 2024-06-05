@@ -33,7 +33,7 @@ router
   .patch(updateTour)
   .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
 
-// mounting
+// mounting nested route
 router.use("/:tourId/reviews", reviewRoute);
 
 module.exports = router;
