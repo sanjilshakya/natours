@@ -45,19 +45,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+exports.getUsers = factoryHandler.getAll(User);
 
-  res.status(200).json({
-    status: "success",
-    count: users.length,
-    data: {
-      users,
-    },
-  });
-});
-
-exports.getUser = factoryHandler.getOne(User)
+exports.getUser = factoryHandler.getOne(User);
 
 exports.updateUser = factoryHandler.updateOne(User);
 
