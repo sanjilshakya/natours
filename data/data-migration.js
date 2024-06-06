@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
 const Tour = require("../models/tourModel");
+const User = require("../models/userModel");
+const Review = require("../models/reviewModel");
 
 mongoose
   .connect(process.env.DB.replace("<PASSWORD>", process.env.DB_PASSWORD))
@@ -15,11 +17,18 @@ mongoose
   });
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, "utf-8"));
+const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, "utf-8"));
+const reviews = JSON.parse(
+  fs.readFileSync(`${__dirname}/reviews.json`, "utf-8")
+);
 
 importData = async () => {
   try {
-    await Tour.create(tours);
-    console.log("Tours migrated to database");
+    const toursPromise = Tour.create(tours);
+    const usersPromise = User.create(users, { validateBeforeSave: false });
+    const reviewsPromise = Review.create(reviews);
+    await Promise.all([toursPromise, usersPromise, reviewsPromise]);
+    console.log("Data migrated to database");
   } catch (error) {
     console.log(error);
   }
@@ -28,8 +37,11 @@ importData = async () => {
 
 deleteData = async () => {
   try {
-    await Tour.deleteMany();
-    console.log("All tours deleted from the database");
+    const toursPromise = Tour.deleteMany();
+    const usersPromise = User.deleteMany();
+    const reviewsPromise = Review.deleteMany();
+    await Promise.all([toursPromise, usersPromise, reviewsPromise]);
+    console.log("All data deleted from the database");
   } catch (error) {
     console.log(error);
   }
