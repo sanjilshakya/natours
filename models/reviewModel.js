@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const Tour = require("./tourModel");
+
 const reviewSchema = new mongoose.Schema(
   {
     review: {
@@ -33,6 +35,29 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Create a index to restrict user to review multiple time in same tour.
+reviewSchema.index({tour:1, user:1},{unique:true})
+
+reviewSchema.statics.calcRatingsAverage = async function (tourId) {
+  const stats = await this.aggregate([
+    { $match: { tour: tourId } },
+    {
+      $group: {
+        _id: "$tour",
+        nRating: { $sum: 1 },
+        avgRating: { $avg: "$rating" },
+      },
+    },
+  ]);
+
+  console.log(stats);
+
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0]?.nRating || 0,
+    ratingsAverage: stats[0]?.avgRating || 4.5,
+  });
+};
+
 reviewSchema.pre(/^find/, function (next) {
   // this.find().populate('tour user')
   this.find().populate({
@@ -41,6 +66,29 @@ reviewSchema.pre(/^find/, function (next) {
   });
   next();
 });
+
+// To update the tour's ratingsAverage and ratingsQuantity once review is created.
+reviewSchema.post("save", function () {
+  // this point to current review
+  // this.constructor points to the model i.e Review
+  this.constructor.calcRatingsAverage(this.tour);
+});
+
+// findByIdAndUpdate and findByIdAndDelete
+// reviewSchema.post(
+//   ["findOneAndUpdate", "findOneAndDelete"],
+//   function (doc, next) {
+//     mongoose.model("Review").calcRatingsAverage(doc.tour);
+//     next();
+//   }
+// );
+
+reviewSchema.post('findOneAndUpdate', function(doc,next){
+  // Not sure the post middleware is not working
+  console.log('test');
+  next()
+})
+
 const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = Review;
