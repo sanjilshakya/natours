@@ -18,6 +18,7 @@ const {
   deleteTour,
   getTourStats,
   getMonthlyPlan,
+  getToursWithin,
 } = require("../controllers/tourController-refactor-3");
 const { protect, restrictTo } = require("../controllers/authController");
 
@@ -32,6 +33,11 @@ router
   .route("/")
   .get(getTours)
   .post(protect, restrictTo("admin", "lead-guide"), createTour);
+
+router
+  .route("/tours-within/:distance/center/:latlng/unit/:unit")
+  .get(getToursWithin);
+
 router
   .route("/:id")
   .get(getTour)

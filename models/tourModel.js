@@ -91,7 +91,7 @@ const tourSchema = new mongoose.Schema(
         enum: ["Point"],
       },
       coordinates: [Number],
-      addres: String,
+      address: String,
       description: String,
     },
     locations: [
@@ -102,7 +102,7 @@ const tourSchema = new mongoose.Schema(
           enum: ["Point"],
         },
         coordinates: [Number],
-        addres: String,
+        address: String,
         description: String,
         day: Number,
       },
@@ -117,6 +117,7 @@ const tourSchema = new mongoose.Schema(
 );
 
 tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ startLocation: "2dsphere" });
 
 // Virtual Properties won't be saved in DB.
 tourSchema.virtual("durationWeeks").get(function () {
