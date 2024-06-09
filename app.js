@@ -14,6 +14,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const app = express();
 
 // GLOBAL MIDDLEWARE
+
 // Set security http headers
 app.use(helmet());
 
