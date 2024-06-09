@@ -16,6 +16,8 @@ const {
   updateUser,
   getUser,
   getMe,
+  uploadUserPhoto,
+  resizeuserPhoto,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -31,7 +33,7 @@ router.use(protect);
 // No need to include protect middleware on the routes, since we already use middleware above
 router.patch("/change-password", updatePassword);
 router.get("/me", getMe, getUser);
-router.patch("/updateMe", updateMe);
+router.patch("/updateMe", uploadUserPhoto, resizeuserPhoto, updateMe);
 router.delete("/deleteMe", deleteMe);
 
 router.use(restrictTo("admin"));

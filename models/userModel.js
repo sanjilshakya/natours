@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
     ],
     unique: true,
   },
-  photo: String,
-  role: {
+  photo: { type: String, default: "default.jpeg" },
+  role: { 
     type: String,
     enum: {
       values: ["admin", "user", "guide", "lead-guide"],
@@ -68,10 +68,10 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.pre(/^find/, function(next){
-  this.find({active: {$ne: false}})
-  next()
-})
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
 
 // Instance Method
 userSchema.methods.correctPassword = async function (
