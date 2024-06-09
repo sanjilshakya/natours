@@ -19,7 +19,9 @@ const {
   getTourStats,
   getMonthlyPlan,
   getToursWithin,
-  getDistances
+  getDistances,
+  uploadTourImages,
+  resizeTourImages,
 } = require("../controllers/tourController-refactor-3");
 const { protect, restrictTo } = require("../controllers/authController");
 
@@ -39,14 +41,18 @@ router
   .route("/tours-within/:distance/center/:latlng/unit/:unit")
   .get(getToursWithin);
 
-router
-  .route("/distance/:latlng/unit/:unit")
-  .get(getDistances);
+router.route("/distance/:latlng/unit/:unit").get(getDistances);
 
 router
   .route("/:id")
   .get(getTour)
-  .patch(protect, restrictTo("admin", "lead-guide"), updateTour)
+  .patch(
+    protect,
+    restrictTo("admin", "lead-guide"),
+    uploadTourImages,
+    resizeTourImages,
+    updateTour
+  )
   .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
 
 // mounting nested route
