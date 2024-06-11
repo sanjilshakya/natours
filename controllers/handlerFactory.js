@@ -4,11 +4,11 @@ const AppError = require("../utils/appError");
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    // For getting tour review reviews
+    // For allow nested GET review on tour
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
 
-    const features = new APIFeatures(Model.find(), req.query)
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
@@ -58,12 +58,10 @@ exports.createOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body,
-       {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    }
-  );
+    });
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
